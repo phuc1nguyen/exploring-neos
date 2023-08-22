@@ -19,6 +19,7 @@ You'll edit this file in Task 1.
 """
 from helpers import cd_to_datetime, datetime_to_str
 
+
 class NearEarthObject:
     """A near-Earth object (NEO).
 
@@ -31,7 +32,7 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
-    def __init__(self, designation: str, name: str, diameter: float, hazardous: bool = False, approaches = []):
+    def __init__(self, designation: str, name: str, diameter: str, hazardous: str, approaches = []):
         """Create a new `NearEarthObject`.
 
         :param designation: the primary designation for this NEO.
@@ -42,8 +43,8 @@ class NearEarthObject:
         """
         self.designation = designation
         self.name = name or None
-        self.diameter = diameter or float('nan')
-        self.hazardous = hazardous
+        self.diameter = float(diameter) if diameter else float('nan')
+        self.hazardous = True if hazardous == 'Y' else False
 
         # Create an empty initial collection of linked approaches.
         self.approaches = approaches
@@ -77,7 +78,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
-    def __init__(self, time: str, distance: float, velocity: float, neo):
+    def __init__(self, time: str, distance: str, velocity: str, neo):
         """Create a new `CloseApproach`.
 
         :param time: the date and time, in UTC, at which the NEO passes closest to Earth.
@@ -85,11 +86,11 @@ class CloseApproach:
         :param velocity: the velocity, in kilometers per second, of the NEO relative to Earth at the closest point.
         :param neo: the NEO that is making a close approach to Earth.
         """
-        self._designation = neo.designation
-        self._name = neo.name
+        self._designation = neo.designation if neo else ''
+        self._name = neo.name if neo else ''
         self.time = cd_to_datetime(time)
-        self.distance = round(distance, 2)
-        self.velocity = round(velocity, 2)
+        self.distance = round(float(distance), 2)
+        self.velocity = round(float(velocity), 2)
 
         # Create an attribute for the referenced NEO, originally None.
         self.neo = neo or None
@@ -115,7 +116,8 @@ class CloseApproach:
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"On {self.time_str}, '{self.fullname}' approached Earth at a distance of {round(self.distance, 2)} au and a velocity of {round(self.velocity, 2)} km/s."
+        return f"On {self.time_str}, '{self.fullname}' approached Earth at a distance of " \
+                f"{round(self.distance, 2)} au and a velocity of {round(self.velocity, 2)} km/s."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
