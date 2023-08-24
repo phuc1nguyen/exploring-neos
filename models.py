@@ -86,8 +86,8 @@ class CloseApproach:
         :param velocity: the velocity, in kilometers per second, of the NEO relative to Earth at the closest point.
         :param neo: the NEO that is making a close approach to Earth.
         """
-        self._designation = neo.designation if neo else ''
-        self._name = neo.name if neo else ''
+        self._designation = ''
+        self._name = ''
         self.time = cd_to_datetime(time)
         self.distance = round(float(distance), 2)
         self.velocity = round(float(velocity), 2)
@@ -116,7 +116,7 @@ class CloseApproach:
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"On {self.time_str}, '{self.fullname}' approached Earth at a distance of " \
+        return f"On {self.time_str}, '{self.fullname.strip()}' approached Earth at a distance of " \
                 f"{round(self.distance, 2)} au and a velocity of {round(self.velocity, 2)} km/s."
 
     def __repr__(self):
