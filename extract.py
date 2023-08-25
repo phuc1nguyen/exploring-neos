@@ -27,6 +27,7 @@ def load_neos(neo_csv_path):
     with open(neo_csv_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         neos = [NearEarthObject(neo['pdes'], neo['name'], neo['diameter'], neo['pha']) for neo in reader]
+
     return neos
 
 def load_approaches(cad_json_path):
@@ -38,14 +39,13 @@ def load_approaches(cad_json_path):
     """fields in json file: signature, count, fields, data"""
     with open(cad_json_path, 'r') as jsonfile:
         data = json.load(jsonfile)
-        fields = data['fields']
-        time_index = fields.index('cd')
-        dist_index = fields.index('dist')
-        velocity_index = fields.index('v_rel')
-        result = []
-        for ca in data['data']:
-            close_approach = CloseApproach(ca[time_index], ca[dist_index], ca[velocity_index], None)
-            close_approach._designation = ca[0]
-            result.append(close_approach)
-    return result 
+
+    fields = data['fields']
+    des_index = fields.index('des')
+    time_index = fields.index('cd')
+    dist_index = fields.index('dist')
+    velocity_index = fields.index('v_rel')
+    close_approaches = [CloseApproach(ca[time_index], ca[dist_index], ca[velocity_index], ca[des_index], None) for ca in data['data']]
+
+    return close_approaches 
 

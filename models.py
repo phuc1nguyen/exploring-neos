@@ -78,7 +78,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
-    def __init__(self, time: str, distance: str, velocity: str, neo):
+    def __init__(self, time: str, distance: str, velocity: str, neo_des, neo):
         """Create a new `CloseApproach`.
 
         :param time: the date and time, in UTC, at which the NEO passes closest to Earth.
@@ -86,7 +86,7 @@ class CloseApproach:
         :param velocity: the velocity, in kilometers per second, of the NEO relative to Earth at the closest point.
         :param neo: the NEO that is making a close approach to Earth.
         """
-        self._designation = ''
+        self._designation = neo_des
         self._name = ''
         self.time = cd_to_datetime(time)
         self.distance = round(float(distance), 2)
@@ -108,15 +108,17 @@ class CloseApproach:
         formatted string that can be used in human-readable representations and
         in serialization to CSV and JSON files.
         """
-        return datetime_to_str(self.time)
+        time_in_datetime = self.time
+        return datetime_to_str(time_in_datetime)
 
     @property
     def fullname(self):
-        return f"{self._designation} {self._name}"
+        if self._name: return f"{self._designation} {self._name}"
+        return f"{self._designation}"
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"On {self.time_str}, '{self.fullname.strip()}' approached Earth at a distance of " \
+        return f"On {self.time_str}, '{self.fullname}' approached Earth at a distance of " \
                 f"{round(self.distance, 2)} au and a velocity of {round(self.velocity, 2)} km/s."
 
     def __repr__(self):

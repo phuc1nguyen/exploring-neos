@@ -42,17 +42,23 @@ class NEODatabase:
         self._approaches = approaches
 
         # Additional mappings to assist queries 
-        self._designations_map = {neo.designation: neo for neo in self._neos if neo.designation}
-        self._names_map = {neo.name: neo for neo in self._neos if neo.name}
+        self._designations_mapping = {}
+        self._names_mapping = {}
 
-        # Link approaches to neos
-        for neo in self._neos:
+        for neo in neos:
+            self._designations_mapping[neo.designation] = neo
+            if neo.name:
+                self._names_mapping[neo.name] = neo
             neo.approaches = [ca for ca in self._approaches if ca._designation == neo.designation]
-
-        # Link neos to approaches
+        
         for ca in self._approaches:
-            ca.neo = self._designations_map[ca._designation]
-            ca._name = ca.neo.name
+            neo = self._designations_mapping.get(ca._designation)
+            if neo is not None:
+                ca.neo = neo
+                ca._name = ca.neo.name
+            else:
+                print('Can not find that neo!')
+
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -67,7 +73,7 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        neo = self._designations_map.get(designation, '') or None
+        neo = self._designations_mapping.get(designation, None)
         return neo
 
     def get_neo_by_name(self, name):
@@ -84,7 +90,7 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        neo = self._names_map.get(name, '') or None
+        neo = self._names_mapping.get(name, None)
         return neo
 
     def query(self, filters=()):
