@@ -18,56 +18,58 @@ import json
 from models import NearEarthObject, CloseApproach
 
 
-def load_neos(neo_csv_path='./data/neos.csv'):
+def load_neos(neo_csv_path):
     """Read near-Earth object information from a CSV file.
 
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    selected_fields = ['pdes', 'name', 'diameter', 'pha']
-
     with open(neo_csv_path, 'r') as in_csv:
         reader = csv.DictReader(in_csv)
-        list_of_neos = []
+        neos = []
+
         for row in reader:
-            list_of_neos.append(dict(row))
-        mini_list_of_neos = [dict((key, neo[key]) for key in selected_fields if key in neo) for neo in list_of_neos]
+            pdes = str(row['pdes'])
+            name = str(row['name']) or None
+            diameter = float(
+                row['diameter']) if row['diameter'] else float('nan')
+            pha = True if row['pha'] == 'Y' else False
 
-    with open('./data/mini_neos.csv', 'w') as out_csv:
-        writer = csv.DictWriter(out_csv, fieldnames=selected_fields)
-        writer.writeheader()
-        writer.writerows(mini_list_of_neos)
-
-    with open('./data/mini_neos.csv', 'r') as in_csv:
-        reader = csv.DictReader(in_csv)
-        neos = [NearEarthObject(**row) for row in reader]
+            neo = NearEarthObject(
+                designation=pdes,
+                name=name,
+                diameter=diameter,
+                hazardous=pha
+            )
+            neos.append(neo)
 
     return neos
 
-def load_approaches(cad_json_path='./data/cad.json'):
+
+def load_approaches(cad_json_path):
     """Read close approach data from a JSON file.
 
     :param cad_json_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    selected_fields = ['des', 'cd', 'dist', 'v_rel']
-
     with open(cad_json_path, 'r') as in_json:
         json_data = json.load(in_json)
-        list_of_close_approaches = [dict(zip(json_data['fields'], data)) for data in json_data['data']]
-        mini_list_of_close_approaches = [
-            dict((key, ca[key]) for key in selected_fields if key in ca)
-            for ca in list_of_close_approaches 
-        ]
+        list_of_close_approaches = [
+            dict(zip(json_data['fields'], data)) for data in json_data['data']]
+        close_approaches = []
 
-    with open('./data/mini_cad.csv', 'w') as out_csv:
-       csv_writer = csv.DictWriter(out_csv, fieldnames=selected_fields)
-       csv_writer.writeheader()
-       csv_writer.writerows(mini_list_of_close_approaches)
+        for approach in list_of_close_approaches:
+            des = str(approach['des'])
+            cd = str(approach['cd'])
+            dist = round(float(approach['dist']), 2)
+            v_rel = round(float(approach['v_rel']), 2)
 
-    with open('./data/mini_cad.csv', 'r') as in_csv:
-        reader = csv.DictReader(in_csv)
-        close_approaches = [CloseApproach(**row) for row in reader]
+            ca = CloseApproach(
+                designation=des,
+                time=cd,
+                distance=dist,
+                velocity=v_rel
+            )
+            close_approaches.append(ca)
 
     return close_approaches
-
