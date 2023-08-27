@@ -38,9 +38,6 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
         """
-        self._neos = neos
-        self._approaches = approaches
-
         # Additional mappings to assist queries 
         self._designations_mapping = {}
         self._names_mapping = {}
@@ -49,15 +46,9 @@ class NEODatabase:
             self._designations_mapping[neo.designation] = neo
             if neo.name:
                 self._names_mapping[neo.name] = neo
-            neo.approaches = [ca for ca in self._approaches if ca._designation == neo.designation]
-        
-        for ca in self._approaches:
-            neo = self._designations_mapping.get(ca._designation)
-            if neo is not None:
-                ca.neo = neo
-                ca._name = ca.neo.name
-            else:
-                print('Can not find that neo!')
+
+        self._approaches = [ca.link_neos_and_approaches(self._designations_mapping) for ca in approaches]
+        self._neos = [ca.neo for ca in self._approaches]
 
 
     def get_neo_by_designation(self, designation):

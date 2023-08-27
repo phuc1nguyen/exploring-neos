@@ -32,21 +32,19 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
-    def __init__(self, designation: str, name: str, diameter: str, hazardous: str, approaches = []):
+    def __init__(self, pdes: str, name: str, diameter: str, pha: str, approaches = []):
         """Create a new `NearEarthObject`.
 
-        :param designation: the primary designation for this NEO.
+        :param pdes: the primary designation for this NEO.
         :param name: the IAU name for this NEO.
         :param diameter: the diameter, in kilometers, of this NEO.
-        :param hazardous: whether or not this NEO is potentially hazardous.
+        :param pha: whether or not this NEO is potentially hazardous.
         :param approaches: a collection of this NEO's close approaches to Earth.
         """
-        self.designation = designation
-        self.name = name or None
+        self.designation = str(pdes)
+        self.name = str(name) or None
         self.diameter = float(diameter) if diameter else float('nan')
-        self.hazardous = True if hazardous == 'Y' else False
-
-        # Create an empty initial collection of linked approaches.
+        self.hazardous = True if pha == 'Y' else False
         self.approaches = approaches
 
     @property
@@ -78,7 +76,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
-    def __init__(self, time: str, distance: str, velocity: str, neo_des, neo):
+    def __init__(self, des: str, cd: str, dist: str, v_rel: str, neo = None):
         """Create a new `CloseApproach`.
 
         :param time: the date and time, in UTC, at which the NEO passes closest to Earth.
@@ -86,14 +84,29 @@ class CloseApproach:
         :param velocity: the velocity, in kilometers per second, of the NEO relative to Earth at the closest point.
         :param neo: the NEO that is making a close approach to Earth.
         """
-        self._designation = neo_des
+        self._designation = str(des)
         self._name = ''
-        self.time = cd_to_datetime(time)
-        self.distance = round(float(distance), 2)
-        self.velocity = round(float(velocity), 2)
+        self.time = cd_to_datetime(cd)
+        self.distance = round(float(dist), 2)
+        self.velocity = round(float(v_rel), 2)
+        self.neo = neo
 
-        # Create an attribute for the referenced NEO, originally None.
-        self.neo = neo or None
+    def link_neos_and_approaches(self, neos_mapping):
+        """Link NEO to approach and approaches to NEO.
+
+        :param neos_mapping: dictionary of designation and corresponding NEO.
+        """
+        if self._designation in neos_mapping:
+            neo = neos_mapping[self._designation]
+            # self._name = self.neo.name
+            if self._designation == neo.designation:
+                neo.approaches.append(self)
+            self.neo = neo
+            # if self._designation == '2020 AY1':
+            #     print(self)
+            #     print(self.neo)
+                # print(len(self.neo.approaches))
+        return self
 
     @property
     def time_str(self):
@@ -125,3 +138,4 @@ class CloseApproach:
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, " \
                f"velocity={self.velocity:.2f}, neo={self.neo!r})"
+
