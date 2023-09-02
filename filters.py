@@ -16,12 +16,12 @@ iterator.
 
 You'll edit this file in Tasks 3a and 3c.
 """
+from itertools import islice
 import operator
 
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
-    pass
 
 
 class AttributeFilter:
@@ -154,11 +154,14 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    if n == None or n == 0:
+        return iterator
+    else:
+        return islice(iterator, n)
 
 
 class DateFilter(AttributeFilter):
+    """A subclass that extends AttributeFilter to filter close approaches by datetime"""
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -168,6 +171,7 @@ class DateFilter(AttributeFilter):
 
 
 class DistanceFilter(AttributeFilter):
+    """A subclass that extends AttributeFilter to filter close approaches by distance"""
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -177,6 +181,7 @@ class DistanceFilter(AttributeFilter):
 
 
 class VelocityFilter(AttributeFilter):
+    """A subclass that extends AttributeFilter to filter close approaches by velocity"""
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -186,6 +191,7 @@ class VelocityFilter(AttributeFilter):
 
 
 class DiameterFilter(AttributeFilter):
+    """A subclass that extends AttributeFilter to filter close approaches by diameter"""
     def __init__(self, op, value):
         super().__init__(op, value)
     
@@ -195,6 +201,7 @@ class DiameterFilter(AttributeFilter):
 
 
 class HazardousFilter(AttributeFilter):
+    """A subclass that extends AttributeFilter to filter close approaches by hazardous"""
     def __init__(self, op, value):
         super().__init__(op, value)
 
