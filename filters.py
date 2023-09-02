@@ -117,11 +117,18 @@ def create_filters(
     if distance_max:
         f = DistanceFilter(operator.le, distance_max)
         filters.append(f)
+    if velocity_min:
+        f = VelocityFilter(operator.ge, velocity_min)
+        filters.append(f)
+    if velocity_max:
+        f = VelocityFilter(operator.le, velocity_max)
+        filters.append(f)
     if hazardous is not None:
         f = HazardousFilter(operator.eq, hazardous)
         filters.append(f)
 
     return filters
+
 
 def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.
@@ -135,6 +142,7 @@ def limit(iterator, n=None):
     # TODO: Produce at most `n` values from the given iterator.
     return iterator
 
+
 class DistanceFilter(AttributeFilter):
     def __init__(self, op, value):
         super().__init__(op, value)
@@ -142,6 +150,16 @@ class DistanceFilter(AttributeFilter):
     @classmethod
     def get(cls, approach):
         return approach.distance
+
+
+class VelocityFilter(AttributeFilter):
+    def __init__(self, op, value):
+        super().__init__(op, value)
+
+    @classmethod
+    def get(cls, approach):
+        return approach.velocity
+
 
 class HazardousFilter(AttributeFilter):
     def __init__(self, op, value):
