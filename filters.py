@@ -21,6 +21,7 @@ import operator
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
+    pass
 
 
 class AttributeFilter:
@@ -50,7 +51,7 @@ class AttributeFilter:
         :param value: The reference value to compare against.
         """
         self.op = op
-        self.value = value
+        self.value = value # the value we get from the command-line 
 
     def __call__(self, approach):
         """Invoke `self(approach)`."""
@@ -108,9 +109,16 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
-    return ()
+    filters = []
 
+    if distance_min:
+        f = DistanceFilter(operator.ge, distance_min)
+        filters.append(f)
+    if distance_max:
+        f = DistanceFilter(operator.le, distance_max)
+        filters.append(f)
+
+    return filters
 
 def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.
@@ -123,3 +131,12 @@ def limit(iterator, n=None):
     """
     # TODO: Produce at most `n` values from the given iterator.
     return iterator
+
+class DistanceFilter(AttributeFilter):
+    def __init__(self, op, value):
+        super().__init__(op, value)
+
+    @classmethod
+    def get(cls, approach):
+        return approach.distance
+

@@ -73,3 +73,4 @@ def load_approaches(cad_json_path):
             close_approaches.append(ca)
 
     return close_approaches
+
