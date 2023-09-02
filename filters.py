@@ -111,6 +111,15 @@ def create_filters(
     """
     filters = []
 
+    if date:
+        f = DateFilter(operator.eq, date)
+        filters.append(f)
+    if start_date:
+        f = DateFilter(operator.ge, start_date)
+        filters.append(f)
+    if end_date:
+        f = DateFilter(operator.le, end_date)
+        filters.append(f)
     if distance_min:
         f = DistanceFilter(operator.ge, distance_min)
         filters.append(f)
@@ -122,6 +131,12 @@ def create_filters(
         filters.append(f)
     if velocity_max:
         f = VelocityFilter(operator.le, velocity_max)
+        filters.append(f)
+    if diameter_min:
+        f = DiameterFilter(operator.ge, diameter_min)
+        filters.append(f)
+    if diameter_max:
+        f = DiameterFilter(operator.le, diameter_max)
         filters.append(f)
     if hazardous is not None:
         f = HazardousFilter(operator.eq, hazardous)
@@ -143,6 +158,15 @@ def limit(iterator, n=None):
     return iterator
 
 
+class DateFilter(AttributeFilter):
+    def __init__(self, op, value):
+        super().__init__(op, value)
+
+    @classmethod
+    def get(cls, approach):
+        return approach.time.date()
+
+
 class DistanceFilter(AttributeFilter):
     def __init__(self, op, value):
         super().__init__(op, value)
@@ -159,6 +183,15 @@ class VelocityFilter(AttributeFilter):
     @classmethod
     def get(cls, approach):
         return approach.velocity
+
+
+class DiameterFilter(AttributeFilter):
+    def __init__(self, op, value):
+        super().__init__(op, value)
+    
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.diameter
 
 
 class HazardousFilter(AttributeFilter):
