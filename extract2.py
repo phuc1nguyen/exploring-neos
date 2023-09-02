@@ -13,7 +13,7 @@ def load_neos(neo_csv_path='./data/neos.csv'):
         reader = csv.DictReader(in_csv)
         list_of_neos = []
         for row in reader:
-            list_of_neos.append(dict(row))
+            list_of_neos.append(row)
         mini_list_of_neos = [dict(
             (key, neo[key]) for key in selected_fields if key in neo) for neo in list_of_neos]
 

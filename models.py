@@ -35,6 +35,7 @@ class NearEarthObject:
 
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
+        Hanlding data types are moved to `extract.py`
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
@@ -51,15 +52,23 @@ class NearEarthObject:
             return f"{self.designation} {self.name}"
         return f"{self.designation}"
 
+    def serialize(self):
+        return {
+            'designation': self.designation,
+            'name': self.name or '',
+            'diameter_km': self.diameter,
+            'potentially_hazardous': self.hazardous
+        }
+
     def __str__(self):
         """Return `str(self)`."""
-        return f"A NearEarthObject {self.fullname} has a diameter of {self.diameter} km " \
+        return f"A NearEarthObject {self.fullname} has a diameter of {self.diameter:.2f} km " \
                f"and {'is' if self.hazardous else 'is not'} potentially hazardous."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, " \
-               f"diameter={self.diameter}, hazardous={self.hazardous!r})"
+               f"diameter={self.diameter:.2f}, hazardous={self.hazardous!r})"
 
 
 class CloseApproach:
@@ -78,11 +87,11 @@ class CloseApproach:
 
     def __init__(self, **info):
         """Create a new `CloseApproach`.
+        Hanlding data types are moved to `extract.py`
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
         self._designation = info.get('designation')
-        self._name = ''
         self.time = cd_to_datetime(info.get('time')) if info.get(
             'time') else info.get('time')
         self.distance = info.get('distance', float('nan'))
@@ -104,12 +113,19 @@ class CloseApproach:
         """
         return self.time and datetime_to_str(self.time)
 
+    def serialize(self):
+        return {
+            'datetime_utc': self.time_str,
+            'distance_au': self.distance,
+            'velocity_km_s': self.velocity
+        }
+
     def __str__(self):
         """Return `str(self)`."""
-        return f"On {self.time_str}, {self.neo.fullname} approaches earth at a distance of {self.distance} au " \
-               f"and at a velocity of {self.velocity} km/s."
+        return f"On {self.time_str}, {self.neo.fullname} approaches earth at a distance of {self.distance:.2f} au " \
+               f"and at a velocity of {self.velocity:.2f} km/s."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
-        return f"CloseApproach(time={self.time_str!r}, distance={self.distance}, " \
+        return f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, " \
                f"velocity={self.velocity:.2f}, neo={self.neo!r})"

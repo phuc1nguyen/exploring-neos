@@ -61,8 +61,8 @@ def load_approaches(cad_json_path):
         for approach in list_of_close_approaches:
             des = str(approach['des'])
             cd = str(approach['cd'])
-            dist = round(float(approach['dist']), 2)
-            v_rel = round(float(approach['v_rel']), 2)
+            dist = float(approach['dist'])
+            v_rel = float(approach['v_rel'])
 
             ca = CloseApproach(
                 designation=des,
