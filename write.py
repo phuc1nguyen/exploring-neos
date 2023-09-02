@@ -14,7 +14,7 @@ import os
 import csv
 import json
 
-
+# Create a new directory (if not exists) for storing output CSV/JSON files
 out_dir = './outfiles'
 if not os.path.exists(out_dir):
     os.mkdir(out_dir)

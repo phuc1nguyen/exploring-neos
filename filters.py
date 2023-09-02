@@ -121,24 +121,34 @@ def create_filters(
     if end_date:
         f = DateFilter(operator.le, end_date)
         filters.append(f)
+
     if distance_min:
         f = DistanceFilter(operator.ge, distance_min)
         filters.append(f)
-    if distance_max:
+    if distance_max and distance_max > 0:
         f = DistanceFilter(operator.le, distance_max)
         filters.append(f)
+    if type(distance_max) is float and distance_max <= 0:
+        raise ValueError("Max distance must be greater than zero")
+
     if velocity_min:
         f = VelocityFilter(operator.ge, velocity_min)
         filters.append(f)
-    if velocity_max:
+    if velocity_max and velocity_max > 0:
         f = VelocityFilter(operator.le, velocity_max)
         filters.append(f)
+    if type(velocity_max) is float and velocity_max <= 0:
+        raise ValueError("Max velocity must be greater than zero")
+
     if diameter_min:
         f = DiameterFilter(operator.ge, diameter_min)
         filters.append(f)
-    if diameter_max:
+    if diameter_max and diameter_max > 0:
         f = DiameterFilter(operator.le, diameter_max)
         filters.append(f)
+    if type(diameter_max) is float and diameter_max <= 0:
+        raise ValueError("Max diameter must be greater than zero")
+
     if hazardous is not None:
         f = HazardousFilter(operator.eq, hazardous)
         filters.append(f)

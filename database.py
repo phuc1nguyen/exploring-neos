@@ -40,25 +40,18 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
         """
-        self._neos = neos
-        self._approaches = approaches
-
+        # Additional mappings to assist queries
         self._designations_mapping = {}
         self._names_mapping = {}
-        for neo in self._neos:
+        for neo in neos:
             self._designations_mapping[neo.designation] = neo
             if neo.name:
                 self._names_mapping[neo.name] = neo
 
-        self._neo_indexes_mapping = {
-            neo.designation: index for index, neo in enumerate(self._neos)}
-
-        for approach in self._approaches:
-            designation = approach._designation
-            if designation in self._neo_indexes_mapping.keys():
-                approach.neo = self._neos[self._neo_indexes_mapping[designation]]
-                self._neos[self._neo_indexes_mapping[designation]
-                           ].approaches.append(approach)
+        # Link NEOs and Close Approaches together
+        self._approaches = [ca.link_neos_and_approaches(
+            self._designations_mapping) for ca in approaches]
+        self._neos = [ca.neo for ca in self._approaches]
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.

@@ -53,6 +53,11 @@ class NearEarthObject:
         return f"{self.designation}"
 
     def serialize(self):
+        """Return a dictionary containing relevant attributes of this NEO for CSV or JSON serialization
+
+        Relevant attributes are designation, name, diameter_km, potentially_hazardous
+        """
+
         return {
             'designation': self.designation,
             'name': self.name or '',
@@ -113,7 +118,27 @@ class CloseApproach:
         """
         return self.time and datetime_to_str(self.time)
 
+    def link_neos_and_approaches(self, neos_mapping):
+        """Link NEO to approach and approaches to NEO.
+
+        :param neos_mapping: dictionary of designation and corresponding NEO.
+        :return: this close approach.
+        """
+        if self._designation in neos_mapping:
+            # Get NEO from mappings using approach's designation
+            neo = neos_mapping[self._designation]
+            if self._designation == neo.designation:
+                # If they belong together, link them
+                neo.approaches.append(self)
+            self.neo = neo
+        return self
+
     def serialize(self):
+        """Return a dictionary containing relevant attributes of this Close Approach for CSV or JSON serialization
+
+        Relevant attributes are datetime_utc, distance_au, velocity_km_s
+        """
+
         return {
             'datetime_utc': self.time_str,
             'distance_au': self.distance,
