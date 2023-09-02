@@ -113,4 +113,3 @@ class NEODatabase:
                 # If this close approach passes all the filters, yield this close approach
                 if all(map(lambda f: f(approach), filters)):
                     yield approach
-

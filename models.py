@@ -83,7 +83,8 @@ class CloseApproach:
         """
         self._designation = info.get('designation')
         self._name = ''
-        self.time = cd_to_datetime(info.get('time')) if info.get('time') else info.get('time')
+        self.time = cd_to_datetime(info.get('time')) if info.get(
+            'time') else info.get('time')
         self.distance = info.get('distance', float('nan'))
         self.velocity = info.get('velocity', float('nan'))
         self.neo = info.get('neo')

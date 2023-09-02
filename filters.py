@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -51,7 +52,7 @@ class AttributeFilter:
         :param value: The reference value to compare against.
         """
         self.op = op
-        self.value = value # the value we get from the command-line 
+        self.value = value  # the value we get from the command-line
 
     def __call__(self, approach):
         """Invoke `self(approach)`."""
@@ -162,6 +163,7 @@ def limit(iterator, n=None):
 
 class DateFilter(AttributeFilter):
     """A subclass that extends AttributeFilter to filter close approaches by datetime"""
+
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -172,6 +174,7 @@ class DateFilter(AttributeFilter):
 
 class DistanceFilter(AttributeFilter):
     """A subclass that extends AttributeFilter to filter close approaches by distance"""
+
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -182,6 +185,7 @@ class DistanceFilter(AttributeFilter):
 
 class VelocityFilter(AttributeFilter):
     """A subclass that extends AttributeFilter to filter close approaches by velocity"""
+
     def __init__(self, op, value):
         super().__init__(op, value)
 
@@ -192,9 +196,10 @@ class VelocityFilter(AttributeFilter):
 
 class DiameterFilter(AttributeFilter):
     """A subclass that extends AttributeFilter to filter close approaches by diameter"""
+
     def __init__(self, op, value):
         super().__init__(op, value)
-    
+
     @classmethod
     def get(cls, approach):
         return approach.neo.diameter
@@ -202,10 +207,10 @@ class DiameterFilter(AttributeFilter):
 
 class HazardousFilter(AttributeFilter):
     """A subclass that extends AttributeFilter to filter close approaches by hazardous"""
+
     def __init__(self, op, value):
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
         return approach.neo.hazardous
-
