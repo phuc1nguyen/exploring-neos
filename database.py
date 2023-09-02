@@ -110,7 +110,7 @@ class NEODatabase:
                 yield approach
         else:
             for approach in self._approaches:
-                # If an approach passes all the filters, yield that approach
+                # If this close approach passes all the filters, yield this close approach
                 if all(map(lambda f: f(approach), filters)):
                     yield approach
 

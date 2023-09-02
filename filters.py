@@ -117,6 +117,9 @@ def create_filters(
     if distance_max:
         f = DistanceFilter(operator.le, distance_max)
         filters.append(f)
+    if hazardous is not None:
+        f = HazardousFilter(operator.eq, hazardous)
+        filters.append(f)
 
     return filters
 
@@ -139,4 +142,12 @@ class DistanceFilter(AttributeFilter):
     @classmethod
     def get(cls, approach):
         return approach.distance
+
+class HazardousFilter(AttributeFilter):
+    def __init__(self, op, value):
+        super().__init__(op, value)
+
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.hazardous
 
