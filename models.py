@@ -35,6 +35,7 @@ class NearEarthObject:
 
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
+
         Hanlding data types are moved to `extract.py`
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
@@ -53,11 +54,10 @@ class NearEarthObject:
         return f"{self.designation}"
 
     def serialize(self):
-        """Return a dictionary containing relevant attributes of this NEO for CSV or JSON serialization
+        """Return a dictionary containing relevant attributes of this NEO for CSV or JSON serialization.
 
-        Relevant attributes are designation, name, diameter_km, potentially_hazardous
+        Relevant attributes are designation, name, diameter_km, potentially_hazardous.
         """
-
         return {
             'designation': self.designation,
             'name': self.name or '',
@@ -92,6 +92,7 @@ class CloseApproach:
 
     def __init__(self, **info):
         """Create a new `CloseApproach`.
+
         Hanlding data types are moved to `extract.py`
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
@@ -99,8 +100,8 @@ class CloseApproach:
         self._designation = info.get('designation')
         self.time = cd_to_datetime(info.get('time')) if info.get(
             'time') else info.get('time')
-        self.distance = info.get('distance', float('nan'))
-        self.velocity = info.get('velocity', float('nan'))
+        self.distance = info.get('distance')
+        self.velocity = info.get('velocity')
         self.neo = info.get('neo')
 
     @property
@@ -134,11 +135,10 @@ class CloseApproach:
         return self
 
     def serialize(self):
-        """Return a dictionary containing relevant attributes of this Close Approach for CSV or JSON serialization
+        """Return a dictionary containing relevant attributes of this Close Approach for CSV or JSON serialization.
 
-        Relevant attributes are datetime_utc, distance_au, velocity_km_s
+        Relevant attributes are datetime_utc, distance_au, velocity_km_s.
         """
-
         return {
             'datetime_utc': self.time_str,
             'distance_au': self.distance,

@@ -71,6 +71,7 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
@@ -172,55 +173,116 @@ def limit(iterator, n=None):
 
 
 class DateFilter(AttributeFilter):
-    """A subclass that extends AttributeFilter to filter close approaches by datetime"""
+    """A subclass that extends AttributeFilter to filter close approaches by datetime."""
 
     def __init__(self, op, value):
+        """Construct a new DateFilter from a binary predicate and a reference value.
+
+        :param op: A 2-argument predicate comparator (such as `operator.le`).
+        :param value: The reference value to compare against.
+        """
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
+        """Get a time attribute from a close approach.
+
+        Overriden superclass method to get time from the supplied `CloseApproach`.
+
+        :param approach: A `CloseApproach` on which to evaluate this filter.
+        :return: The value of time, comparable to `self.value` via `self.op`.
+        """
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
-    """A subclass that extends AttributeFilter to filter close approaches by distance"""
+    """A subclass that extends AttributeFilter to filter close approaches by distance."""
 
     def __init__(self, op, value):
+        """Construct a new DistanceFilter from a binary predicate and a reference value.
+
+        :param op: A 2-argument predicate comparator (such as `operator.le`).
+        :param value: The reference value to compare against.
+        """
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
+        """Get a distance attribute from a close approach.
+
+        Overriden superclass method to get distance from the supplied `CloseApproach`.
+
+        :param approach: A `CloseApproach` on which to evaluate this filter.
+        :return: The value of distance, comparable to `self.value` via `self.op`.
+        """
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
-    """A subclass that extends AttributeFilter to filter close approaches by velocity"""
+    """A subclass that extends AttributeFilter to filter close approaches by velocity."""
 
     def __init__(self, op, value):
+        """Construct a new VelocityFilter from a binary predicate and a reference value.
+
+        :param op: A 2-argument predicate comparator (such as `operator.le`).
+        :param value: The reference value to compare against.
+        """
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
+        """Get a velocity attribute from a close approach.
+
+        Overriden superclass method to get velocity from the supplied `CloseApproach`.
+
+        :param approach: A `CloseApproach` on which to evaluate this filter.
+        :return: The value of velocity, comparable to `self.value` via `self.op`.
+        """
         return approach.velocity
 
 
 class DiameterFilter(AttributeFilter):
-    """A subclass that extends AttributeFilter to filter close approaches by diameter"""
+    """A subclass that extends AttributeFilter to filter close approaches by diameter."""
 
     def __init__(self, op, value):
+        """Construct a new DiameterFilter from a binary predicate and a reference value.
+
+        :param op: A 2-argument predicate comparator (such as `operator.le`).
+        :param value: The reference value to compare against.
+        """
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
+        """Get a diameter attribute from a close approach.
+
+        Overriden superclass method to get diameter from the supplied `CloseApproach`.
+
+        :param approach: A `CloseApproach` on which to evaluate this filter.
+        :return: The value of diameter, comparable to `self.value` via `self.op`.
+        """
         return approach.neo.diameter
 
 
 class HazardousFilter(AttributeFilter):
-    """A subclass that extends AttributeFilter to filter close approaches by hazardous"""
+    """A subclass that extends AttributeFilter to filter close approaches by hazardous."""
 
     def __init__(self, op, value):
+        """Construct a new HazardousFilter from a binary predicate and a reference value.
+
+        :param op: A 2-argument predicate comparator (such as `operator.le`).
+        :param value: The reference value to compare against.
+        """
         super().__init__(op, value)
 
     @classmethod
     def get(cls, approach):
+        """Get a hazardous attribute from a close approach.
+
+        Overriden superclass method to get hazardous from the supplied `CloseApproach`.
+
+        :param approach: A `CloseApproach` on which to evaluate this filter.
+        :return: The value of hazardous, comparable to `self.value` via `self.op`.
+        """
         return approach.neo.hazardous
+

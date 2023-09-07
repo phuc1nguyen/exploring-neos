@@ -31,9 +31,12 @@ def load_neos(neo_csv_path):
         for row in reader:
             pdes = str(row['pdes'])
             name = str(row['name']) or None
-            diameter = float(
-                row['diameter']) if row['diameter'] else float('nan')
             pha = True if row['pha'] == 'Y' else False
+
+            try:
+                diameter = float(row['diameter']) if row['diameter'] else float('nan')
+            except ValueError:
+                raise ValueError('NEO diameter must be a number')
 
             neo = NearEarthObject(
                 designation=pdes,
@@ -61,8 +64,12 @@ def load_approaches(cad_json_path):
         for approach in list_of_close_approaches:
             des = str(approach['des'])
             cd = str(approach['cd'])
-            dist = float(approach['dist'])
-            v_rel = float(approach['v_rel'])
+
+            try:
+                dist = float(approach['dist']) if approach['dist'] else float('nan')
+                v_rel = float(approach['v_rel']) if approach['v_rel'] else float('nan')
+            except ValueError:
+                raise ValueError('Close approach distance and velocity must be numbers')
 
             ca = CloseApproach(
                 designation=des,
